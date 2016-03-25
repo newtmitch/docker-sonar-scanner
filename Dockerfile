@@ -13,6 +13,10 @@ RUN apt-get install -y maven
 # RUN sudo apt-get install -y openjdk-7-jdk
 # RUN sudo apt-get install -y build-essential
 
+# Set timezone to CST
+ENV TZ=America/Chicago
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 WORKDIR /root
 
 RUN curl --insecure -OL https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-2.5.1.zip
