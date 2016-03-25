@@ -1,6 +1,6 @@
 # docker-sonar-scanner Overview
 
-A quick (Sonar)[http://www.sonarqube.org/] scanner (command line)
+A quick [Sonar](http://www.sonarqube.org/) scanner (command line)
 
 This Dockerfile sets up the command line scanner vs. any other existing analysis
 method. For other analysis methods, see the bottom of this page:
