@@ -59,7 +59,7 @@ I've also included Dockerfile.server, which uses the sonarqube:latest image as a
 basis and basically puts in the mechanism to update the server time to a user-defined
 time zone vs. the default (correct time reporting for analyzer runs).
 
-Docker Hub of this build available here: 
+Docker Hub of this build available here:
 
 You can modify the Dockerfile to update the timezone, or just pass in the environment variable on-demand:
 
