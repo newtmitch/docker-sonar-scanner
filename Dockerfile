@@ -2,11 +2,7 @@
 FROM java:7
 
 RUN apt-get update
-RUN apt-get install -y curl
-RUN apt-get install -y git
-RUN apt-get install -y tmux
-RUN apt-get install -y htop
-RUN apt-get install -y maven
+RUN apt-get install -y curl git tmux htop maven
 
 # Don't need these right now. Java is covered in the FROM statement above,
 # and build-essential might be overkill for now.
