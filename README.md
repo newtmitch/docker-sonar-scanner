@@ -38,7 +38,7 @@ time zone (set to CST by default - if that's yours just omit the -e parameter):
 
     docker run -d --name sonarqube -e "TZ=America/Chicago" -p 9000:9000 -p 9092:9092 sonarqube:5.2
 
-After your server is running, run the following command from the command line to stasrt the scanner.
+After your server is running, run the following command from the command line to start the scanner.
 
     docker run -ti -v $(pwd):/root/src --link sonarqube mitch/sonarscanner 
 
