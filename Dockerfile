@@ -1,5 +1,5 @@
 
-FROM java:7
+FROM java:8
 
 RUN apt-get update
 RUN apt-get install -y curl git tmux htop maven
