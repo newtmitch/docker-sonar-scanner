@@ -29,14 +29,14 @@ To build this scanner image, just issue a standard Docker build command:
 
 # Usage
 
-Make sure you have a Sonar Qube server running. You can use the official build here:
+Make sure you have a Sonar Qube server running. You can use the official build here, using the latest
+version. Modify the version number if you need something specific (used to be `sonarqube:5.2`, for example).
 
-    docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube:5.2
+    docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube
 
-or use my slightly modified version with a command to update the server time to a specified
-time zone (set to CST by default - if that's yours just omit the -e parameter):
+or if you're using my server build from `Dockerfile.server` you can use a command to update the server time to a specified time zone (set to CST by default - if that's yours just omit the -e parameter):
 
-    docker run -d --name sonarqube -e "TZ=America/Chicago" -p 9000:9000 -p 9092:9092 sonarqube:5.2
+    docker run -d --name sonarqube -e "TZ=America/Chicago" -p 9000:9000 -p 9092:9092 mitch/sonarqube
 
 After your server is running, run the following command from the command line to start the scanner.
 
@@ -59,8 +59,6 @@ I've also included Dockerfile.server, which uses the sonarqube:latest image as a
 basis and basically puts in the mechanism to update the server time to a user-defined
 time zone vs. the default (correct time reporting for analyzer runs).
 
-Docker Hub of this build available here:
+You can modify the Dockerfile to update the timezone, or just pass in the environment variable on-demand (assumes you build it with tag `mitch/sonarqube`):
 
-You can modify the Dockerfile to update the timezone, or just pass in the environment variable on-demand:
-
-    docker run -d --name sonarqube -e "TZ=America/Chicago" -p 9000:9000 -p 9092:9092 sonarqube
+    docker run -d --name sonarqube -e "TZ=America/Chicago" -p 9000:9000 -p 9092:9092 mitch/sonarqube
