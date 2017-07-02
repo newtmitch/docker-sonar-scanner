@@ -1,6 +1,8 @@
 
 FROM openjdk:8
 
+LABEL maintainer="Ryan Mitchell <mitch@ryansmitchell.com>"
+
 RUN apt-get update
 RUN apt-get install -y curl git tmux htop maven
 
