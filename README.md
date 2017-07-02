@@ -15,64 +15,60 @@ http://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner
 
 and for a list of command-line options: http://docs.sonarqube.org/display/SONAR/Analysis+Parameters
 
-# Prerequisites
 
-You must have a Sonar Qube server running. I used the Docker image available here:
+# Quick Reference - tl;dr version
 
-https://hub.docker.com/_/sonarqube/
+Using the official Sonar Qube Docker image:
 
+```
+docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube
+docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner
+```
 
-# Build
+Run this from the root of your source code directory, it'll scan everything below it.
 
-## Sonar Scanner 
-
-To build this scanner image, just issue a standard Docker build command:
-
-    docker build -t mitch/sonarscanner .
-
-## Sonar Qube Server
-
-To build the customized Sonar Qube server, run the following command. See the [Server image](#server-image) section below for details on this image build.
-
-    docker build -t mitch/sonarqube -f Dockerfile.server .
+This uses the latest Qube image - if you want LTS, use image name `sonarqube:lts`.
 
 
-# Usage
+# Running - Long Version
+
+To run the scanner you must have a Sonar Qube running. If you don't already have a Qube instance running somewhere, you can start one via Docker using the official Docker image or the variant I have below.
+
 
 ## Run Sonar Qube Server
 
-Make sure you have a Sonar Qube server running.
-
-If you used the timezone-setting-away server build per the instructions above, run the following command. If you omit the TZ parameter, it'll default to CST.
-
-    docker run -d --name sonarqube -e "TZ=America/Chicago" -p 9000:9000 -p 9092:9092 mitch/sonarqube
-
-If you prefer to use an official Sonar Qube image, run the following command instead. Note that if you need a particular version of Sonar Qube, you need to use something like `sonarqube:5.2` instead of what's shown below.
+If you prefer to use an official Sonar Qube image, run the following command. Note that if you need a particular version of Sonar Qube, you need to use something like `sonarqube:5.2` instead of what's shown below.
 
     docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube
-    
+
+If you prefer a server build that automatically sets the timezone when you start it you can use the custom image variant I have here per the command below. If you omit the TZ parameter, it'll default to CST.
+
+    docker run -d --name sonarqube -e "TZ=America/Chicago" -p 9000:9000 -p 9092:9092 newtmich/sonar-server
+
 
 ## Run Sonar Scanner
 
 After your server is running, run the following command from the command line to start the scanner. This uses the default settings in the sonar-runner.properties file, which you can overload with -D commands (see below).
 
-    docker run -ti -v $(pwd):/root/src --link sonarqube mitch/sonarscanner 
+    docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner 
 
 Replace "$(pwd)" with the absolute path of the top-level source directly you're
 interested in if you're not running the docker image from the top level project
-directory.
+directory. It will scan everything under that directory when it starts up.
 
 The supplied sonar-runner.properties file points to http://192.168.99.100 as the
-Qube server. If you need to change that, either run the Docker container with
-the bash command and run the command yourself, or just modify the command when
-you run the container:
+Qube server. If you need to change that or any other of the variables that Scanner needs to run, you can pass them in with the command itself to override them:
 
-    docker run -ti -v $(pwd):/root/src --link sonarqube mitch/sonarscanner sonar-runner sonar.host.url=YOURURL -Dsonar.projectBaseDir=./src
+    docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner sonar-scanner sonar.host.url=YOURURL -Dsonar.projectBaseDir=./src
 
-Here's a fully-loaded command line that basically overrides everything from the sonar-runner.properties file on the command-line itself. The settings shown here match those in the sonar-runner.properties file.
+or if you're running the `newtmitch/sonar-scanner:2.5.1` image, because the script name changed between 2.5.1 and 3.0.3 at some point:
+
+    docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner sonar-runner sonar.host.url=YOURURL -Dsonar.projectBaseDir=./src
+
+Here's a fully-loaded command line (based on latest/3.0.3 version) that basically overrides everything from the sonar-runner.properties file on the command-line itself. The settings shown here match those in the sonar-runner.properties file.
 
 ```
-docker run -ti -v $(pwd):/root/src --link sonarqube mitch/sonarscanner sonar-runner \
+docker run -ti -v $(pwd):/root/src --link sonarqube mitch/sonarscanner sonar-scanner \
   -Dsonar.host.url=http://sonarqube:9000 \
   -Dsonar.jdbc.url=jdbc:h2:tcp://sonarqube/sonar \
   -Dsonar.projectKey=MyProjectKey \
@@ -82,6 +78,22 @@ docker run -ti -v $(pwd):/root/src --link sonarqube mitch/sonarscanner sonar-run
   -Dsonar.sources=./src
 ```
 
+
+# Build
+
+## Sonar Scanner 
+
+To build this scanner image, just issue a standard Docker build command:
+
+    docker build -t my-sonar-scanner .
+
+## Sonar Qube Server
+
+To build the customized Sonar Qube server, run the following command. See the [Server image](#server-image) section below for details on this image build.
+
+    docker build -t my-sonar-server -f Dockerfile.server .
+
+
 # Server image
 
 I've also included Dockerfile.server, which uses the sonarqube:latest image as a 
@@ -90,4 +102,4 @@ time zone vs. the default (correct time reporting for analyzer runs).
 
 You can modify the Dockerfile to update the timezone, or just pass in the environment variable on-demand (assumes you build it with tag `mitch/sonarqube`). If you omit the TZ setting it'll default to CST.
 
-    docker run -d --name sonarqube -e "TZ=America/Chicago" -p 9000:9000 -p 9092:9092 mitch/sonarqube
+    docker run -d --name sonarqube -e "TZ=America/Chicago" -p 9000:9000 -p 9092:9092 newtmitch/sonar-server
