@@ -83,9 +83,9 @@ docker run -ti -v $(pwd):/root/src --link sonarqube mitch/sonarscanner sonar-sca
 
 ## Sonar Scanner 
 
-To build this scanner image, just issue a standard Docker build command:
+To build this scanner image, just issue a standard Docker build command - make sure to specify the Dockerfile that you're building:
 
-    docker build -t my-sonar-scanner .
+    docker build -t my-sonar-scanner -f Dockerfile.sonarscanner-3.0.3-alpine .
 
 ## Sonar Qube Server
 
