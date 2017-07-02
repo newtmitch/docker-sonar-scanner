@@ -54,7 +54,7 @@ If you prefer to use an official Sonar Qube image, run the following command ins
 
 ## Run Sonar Scanner
 
-After your server is running, run the following command from the command line to start the scanner.
+After your server is running, run the following command from the command line to start the scanner. This uses the default settings in the sonar-runner.properties file, which you can overload with -D commands (see below).
 
     docker run -ti -v $(pwd):/root/src --link sonarqube mitch/sonarscanner 
 
@@ -69,6 +69,18 @@ you run the container:
 
     docker run -ti -v $(pwd):/root/src --link sonarqube mitch/sonarscanner sonar-runner sonar.host.url=YOURURL -Dsonar.projectBaseDir=./src
 
+Here's a fully-loaded command line that basically overrides everything from the sonar-runner.properties file on the command-line itself. The settings shown here match those in the sonar-runner.properties file.
+
+```
+docker run -ti -v $(pwd):/root/src --link sonarqube mitch/sonarscanner sonar-runner \
+  -Dsonar.host.url=http://sonarqube:9000 \
+  -Dsonar.jdbc.url=jdbc:h2:tcp://sonarqube/sonar \
+  -Dsonar.projectKey=MyProjectKey \
+  -Dsonar.projectName="My Project Name" \
+  -Dsonar.projectVersion=1 \
+  -Dsonar.projectBaseDir=/root \
+  -Dsonar.sources=./src
+```
 
 # Server image
 
