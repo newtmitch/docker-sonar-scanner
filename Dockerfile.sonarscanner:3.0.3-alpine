@@ -1,0 +1,15 @@
+FROM openjdk:8-alpine
+
+LABEL maintainer="Manuel Weidmann <manuel.weidmann@7p-group.com>"
+
+RUN apk add --no-cache  curl grep sed unzip
+
+ADD https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.0.3.778-linux.zip /sonar.zip
+RUN unzip /sonar.zip
+RUN rm /sonar.zip
+
+#   ensure Sonar uses the provided Java for musl instead of a borked glibc one
+RUN sed -i 's/use_embedded_jre=true/use_embedded_jre=false/g' /sonar-scanner-3.0.3.778-linux/bin/sonar-scanner
+
+ENV SONAR_HOME /sonar-scanner-3.0.3.778-linux
+ENV PATH $PATH:$SONAR_HOME/bin
