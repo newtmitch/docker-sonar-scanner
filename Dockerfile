@@ -6,11 +6,6 @@ LABEL maintainer="Ryan Mitchell <mitch@ryansmitchell.com>"
 RUN apt-get update
 RUN apt-get install -y curl git tmux htop maven
 
-# Don't need these right now. Java is covered in the FROM statement above,
-# and build-essential might be overkill for now.
-# RUN sudo apt-get install -y openjdk-7-jdk
-# RUN sudo apt-get install -y build-essential
-
 # Set timezone to CST
 ENV TZ=America/Chicago
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
