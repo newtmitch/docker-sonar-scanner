@@ -1,5 +1,5 @@
 
-FROM sonarqube:latest
+FROM sonarqube:lts
 
 LABEL maintainer="Ryan Mitchell <mitch@ryansmitchell.com>"
 
