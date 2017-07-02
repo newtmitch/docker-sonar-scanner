@@ -1,4 +1,3 @@
-
 FROM openjdk:8
 
 LABEL maintainer="Ryan Mitchell <mitch@ryansmitchell.com>"
