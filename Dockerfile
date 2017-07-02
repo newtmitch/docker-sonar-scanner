@@ -17,9 +17,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /root
 
-RUN curl --insecure -OL https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-2.5.1.zip
-RUN unzip sonar-scanner-2.5.1.zip
-RUN rm sonar-scanner-2.5.1.zip
+ADD https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-2.5.1.zip /root/sonarscanner.zip
+RUN unzip sonarscanner.zip
+RUN rm sonarscanner.zip
 
 ENV SONAR_RUNNER_HOME=/root/sonar-scanner-2.5.1
 ENV PATH $PATH:/root/sonar-scanner-2.5.1/bin
