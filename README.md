@@ -68,7 +68,7 @@ or if you're running the `newtmitch/sonar-scanner:2.5.1` image, because the scri
 Here's a fully-loaded command line (based on latest/3.0.3 version) that basically overrides everything from the sonar-runner.properties file on the command-line itself. The settings shown here match those in the sonar-runner.properties file.
 
 ```
-docker run -ti -v $(pwd):/root/src --link sonarqube mitch/sonarscanner sonar-scanner \
+docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner sonar-scanner \
   -Dsonar.host.url=http://sonarqube:9000 \
   -Dsonar.jdbc.url=jdbc:h2:tcp://sonarqube/sonar \
   -Dsonar.projectKey=MyProjectKey \
