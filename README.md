@@ -43,7 +43,7 @@ If you prefer to use an official Sonar Qube image, run the following command. No
 
 If you prefer a server build that automatically sets the timezone when you start it you can use the custom image variant I have here per the command below. If you omit the TZ parameter, it'll default to CST.
 
-    docker run -d --name sonarqube -e "TZ=America/Chicago" -p 9000:9000 -p 9092:9092 newtmich/sonar-server
+    docker run -d --name sonarqube -e "TZ=America/Chicago" -p 9000:9000 -p 9092:9092 newtmitch/sonar-server
 
 
 ## Run Sonar Scanner
