@@ -5,8 +5,8 @@ LABEL maintainer="Dan Streeter <dan@danstreeter.co.uk>"
 RUN apt-get update
 RUN apt-get install -y curl git tmux htop maven
 
-# Set timezone to GMT
-ENV TZ=Europe/London
+# Set timezone to CST
+ENV TZ=America/Chicago
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /root
