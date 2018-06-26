@@ -1,6 +1,6 @@
 FROM openjdk:8-alpine
 
-LABEL maintainer="Dan Streeter <dan@danstreeter.co.uk>"
+LABEL maintainer="Ryan Mitchell <mitch@ryansmitchell.com>"
 
 RUN apk add --no-cache  curl grep sed unzip
 
