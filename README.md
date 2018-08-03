@@ -15,6 +15,8 @@ http://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner
 
 and for a list of command-line options: http://docs.sonarqube.org/display/SONAR/Analysis+Parameters
 
+**NOTE:** I usually only test the latest version of the scanner, even though I might update the
+older Dockerfiles here and there. So YMMV. Let me know if there are issues, though.
 
 # Quick Reference - tl;dr version
 
@@ -29,6 +31,25 @@ Run this from the root of your source code directory, it'll scan everything belo
 
 This uses the latest Qube image - if you want LTS, use image name `sonarqube:lts`.
 
+Run the alpine version:
+
+```
+docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner:alpine
+```
+
+# Change Notes
+
+## 2018_08_03
+* Removed the 2.5.1 sonar scanner images, as the downloads for that version are no longer available.
+* Normalized the name of the unzipped sonar scanner directory to `sonar-scanner`
+so specific version numbers weren't included in the directory name. This allows for easier config
+replacement at runtime and (hopefully) reduces unnecessary complexity / specificity.
+* Added a new tag for the latest version of Sonar Scanner with the alpine base image: 
+`newtmitch/sonar-scanner:alpine`
+* Added some more instructions for running the sonar scanner and replacing the image-internal
+sonar-runner.properties with the external version at runtime (via normalizing the sonar scanner
+directory name).
+* Added instructions for myself later so I can more quickly run the build / update commands
 
 # Running - Long Version
 
@@ -78,6 +99,36 @@ docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner sona
   -Dsonar.sources=./src
 ```
 
+Or just have your local sonar-runner.properties override the default version built into the
+scanner image. Note that you'll likely have to modify your paths to pick up the properties
+file, source directories, or copy the sonar-runner.properties file into your actual source
+code project in order to have it be called with this command as-written below.
+
+```
+docker run -ti \
+  -v $(pwd):/root/src \
+  -v $(pwd)/sonar-runner.properties:/root/sonar-scanner/conf/sonar-runner.properties \
+  --link sonarqube newtmitch/sonar-scanner sonar-scanner
+```
+
+## Typescript
+
+As of Aug 3, 2018, I installed Node as part of the scanner image so it can properly scan JS and TS
+files as-needed. I suggest you add an exclusion as part of either sonar-runner.properties:
+
+```
+sonar.exclusions=**/node_modules/**/*
+```
+
+or via the command line:
+
+```
+docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner sonar-scanner \         
+  -Dsonar.exclusions=**/node_modules/**/*
+```
+
+I've added this to the deafult sonar-runner.properties file, so remove that if you don't want it
+there for some reason.
 
 # Build
 
@@ -85,7 +136,7 @@ docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner sona
 
 To build this scanner image, just issue a standard Docker build command - make sure to specify the Dockerfile that you're building:
 
-    docker build -t my-sonar-scanner -f Dockerfile.sonarscanner-3.0.3-alpine .
+    docker build -t newtmitch/sonar-scanner:latest -f Dockerfile.sonarscanner-3.2.0-full .
 
 ## Sonar Qube Server
 
@@ -93,6 +144,39 @@ To build the customized Sonar Qube server, run the following command. See the [S
 
     docker build -t my-sonar-server -f Dockerfile.server .
 
+## Publishing Docker Updates
+
+This section is here so Mitch doesn't have to figure this out every time he updates these images
+and wants to push them to the repo... :smile:
+
+```
+docker build -t newtmitch/sonar-scanner:latest -f Dockerfile.sonarscanner-3.2.0-full .
+docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3.2.0
+docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3.2
+docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3
+docker tag newtmitch/sonar-scanner:latest
+docker push newtmitch/sonar-scanner:latest
+docker push newtmitch/sonar-scanner:3.2.0
+docker push newtmitch/sonar-scanner:3.2
+docker push newtmitch/sonar-scanner:3
+
+docker build -t newtmitch/sonar-scanner:3.2.0-alpine -f Dockerfile.sonarscanner-3.2.0-alpine .
+docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:alpine
+docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:3.2-alpine
+docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:3-alpine
+docker push newtmitch/sonar-scanner:3.2.0-alpine
+docker push newtmitch/sonar-scanner:3.2-alpine
+docker push newtmitch/sonar-scanner:3-alpine
+docker push newtmitch/sonar-scanner:alpine
+
+docker build -t newtmitch/sonar-scanner:3.0.3 -f Dockerfile.sonarscanner-3.0.3-full .
+docker tag newtmitch/sonar-scanner:3.0.3 newtmitch/sonar-scanner:3.0
+docker push newtmitch/sonar-scanner:3.0.3
+docker push newtmitch/sonar-scanner:3.0
+
+docker build -t newtmitch/sonar-scanner:3.0.3-alpine -f Dockerfile.sonarscanner-3.0.3-alpine .
+docker push newtmitch/sonar-scanner:3.0.3-alpine
+```
 
 # Server image
 
