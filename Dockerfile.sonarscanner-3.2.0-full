@@ -22,6 +22,10 @@ RUN mv sonar-scanner-3.2.0.1227-linux sonar-scanner
 
 ENV SONAR_RUNNER_HOME=/root/sonar-scanner
 ENV PATH $PATH:/root/sonar-scanner/bin
+# Allow non-root user to execute sonar-scanner
+RUN chmod +x /root \
+    && chmod +x /root/sonar-scanner \
+    && chmod -R +x /root/sonar-scanner/bin
 
 COPY sonar-runner.properties ./sonar-scanner/conf/sonar-scanner.properties
 
