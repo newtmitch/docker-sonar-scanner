@@ -2,7 +2,7 @@ FROM openjdk:8-alpine
 
 LABEL maintainer="Ryan Mitchell <mitch@ryansmitchell.com>"
 
-RUN apk add --no-cache  curl grep sed unzip
+RUN apk add --no-cache curl grep sed unzip bash nodejs nodejs-npm
 
 # Set timezone to CST
 ENV TZ=America/Chicago

@@ -150,31 +150,49 @@ This section is here so Mitch doesn't have to figure this out every time he upda
 and wants to push them to the repo... :smile:
 
 ```
+#
+# 3.2.0
+#
 docker build -t newtmitch/sonar-scanner:latest -f Dockerfile.sonarscanner-3.2.0-full .
-docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3.2.0
-docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3.2
-docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3
-docker tag newtmitch/sonar-scanner:latest
+
+docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3.2.0 && \
+    docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3.2 && \
+    docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3
+
 docker push newtmitch/sonar-scanner:latest
 docker push newtmitch/sonar-scanner:3.2.0
 docker push newtmitch/sonar-scanner:3.2
 docker push newtmitch/sonar-scanner:3
 
+#
+# 3.2.0 Alpine
+#
 docker build -t newtmitch/sonar-scanner:3.2.0-alpine -f Dockerfile.sonarscanner-3.2.0-alpine .
-docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:alpine
-docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:3.2-alpine
-docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:3-alpine
+
+docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:alpine && \
+    docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:3.2-alpine && \
+    docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:3-alpine
+
 docker push newtmitch/sonar-scanner:3.2.0-alpine
 docker push newtmitch/sonar-scanner:3.2-alpine
 docker push newtmitch/sonar-scanner:3-alpine
 docker push newtmitch/sonar-scanner:alpine
 
+#
+# 3.0.3
+#
 docker build -t newtmitch/sonar-scanner:3.0.3 -f Dockerfile.sonarscanner-3.0.3-full .
+
 docker tag newtmitch/sonar-scanner:3.0.3 newtmitch/sonar-scanner:3.0
+
 docker push newtmitch/sonar-scanner:3.0.3
 docker push newtmitch/sonar-scanner:3.0
 
+#
+# 3.0.3 Alpine
+#
 docker build -t newtmitch/sonar-scanner:3.0.3-alpine -f Dockerfile.sonarscanner-3.0.3-alpine .
+
 docker push newtmitch/sonar-scanner:3.0.3-alpine
 ```
 
