@@ -37,6 +37,13 @@ Run the alpine version:
 docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner:alpine
 ```
 
+If you want to run without a local SonarQube instance (i.e. using a remote SonarQube), 
+just leave off the `--link` parameter:
+
+```
+docker run -ti -v $(pwd):/root/src newtmitch/sonar-scanner
+```
+
 # Change Notes
 
 ## 2018_08_03
