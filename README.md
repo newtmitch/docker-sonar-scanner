@@ -107,7 +107,7 @@ code project in order to have it be called with this command as-written below.
 ```
 docker run -ti \
   -v $(pwd):/root/src \
-  -v $(pwd)/sonar-runner.properties:/root/sonar-scanner/conf/sonar-runner.properties \
+  -v $(pwd)/sonar-runner.properties:/root/sonar-scanner/conf/sonar-scanner.properties \
   --link sonarqube newtmitch/sonar-scanner sonar-scanner
 ```
 
