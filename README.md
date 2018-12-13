@@ -159,9 +159,9 @@ docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3.2.0 && \
     docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3.2 && \
     docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3
 
-docker push newtmitch/sonar-scanner:latest
-docker push newtmitch/sonar-scanner:3.2.0
-docker push newtmitch/sonar-scanner:3.2
+docker push newtmitch/sonar-scanner:latest && \
+docker push newtmitch/sonar-scanner:3.2.0 && \
+docker push newtmitch/sonar-scanner:3.2 && \
 docker push newtmitch/sonar-scanner:3
 
 #
@@ -173,9 +173,9 @@ docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:alpine &
     docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:3.2-alpine && \
     docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:3-alpine
 
-docker push newtmitch/sonar-scanner:3.2.0-alpine
-docker push newtmitch/sonar-scanner:3.2-alpine
-docker push newtmitch/sonar-scanner:3-alpine
+docker push newtmitch/sonar-scanner:3.2.0-alpine && \
+docker push newtmitch/sonar-scanner:3.2-alpine && \
+docker push newtmitch/sonar-scanner:3-alpine && \
 docker push newtmitch/sonar-scanner:alpine
 
 #
@@ -185,7 +185,7 @@ docker build -t newtmitch/sonar-scanner:3.0.3 -f Dockerfile.sonarscanner-3.0.3-f
 
 docker tag newtmitch/sonar-scanner:3.0.3 newtmitch/sonar-scanner:3.0
 
-docker push newtmitch/sonar-scanner:3.0.3
+docker push newtmitch/sonar-scanner:3.0.3 && \
 docker push newtmitch/sonar-scanner:3.0
 
 #
