@@ -46,7 +46,21 @@ docker run -ti -v $(pwd):/root/src newtmitch/sonar-scanner
 
 # Change Notes
 
-## 2018_08_03
+### 2019-01-04
+* Decreased size of images by combining multiple command line operations into a single RUN command
+    (@DmitriyStoyanov)
+
+### 2018-10-14
+* Changed Sonar Scanner URL from bintray to sonarsource (@parnpresso)
+
+### 2018-10-03
+* Added NodeJS to the image to support JS/TS scanning (fixes #9)
+
+### 2018-06-24
+* Returned default timezone to original maintainers (@danstreeter)
+* Added Scanner v3.2.0 to Dockerfiles (@danstreeter)
+
+### 2018-08-03
 * Removed the 2.5.1 sonar scanner images, as the downloads for that version are no longer available.
 * Normalized the name of the unzipped sonar scanner directory to `sonar-scanner`
 so specific version numbers weren't included in the directory name. This allows for easier config
