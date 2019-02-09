@@ -37,9 +37,30 @@ Run the alpine version:
 docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner:alpine
 ```
 
+If you want to run without a local SonarQube instance (i.e. using a remote SonarQube), 
+just leave off the `--link` parameter:
+
+```
+docker run -ti -v $(pwd):/root/src newtmitch/sonar-scanner
+```
+
 # Change Notes
 
-## 2018_08_03
+### 2019-01-04
+* Decreased size of images by combining multiple command line operations into a single RUN command
+    (@DmitriyStoyanov)
+
+### 2018-10-14
+* Changed Sonar Scanner URL from bintray to sonarsource (@parnpresso)
+
+### 2018-10-03
+* Added NodeJS to the image to support JS/TS scanning (fixes #9)
+
+### 2018-06-24
+* Returned default timezone to original maintainers (@danstreeter)
+* Added Scanner v3.2.0 to Dockerfiles (@danstreeter)
+
+### 2018-08-03
 * Removed the 2.5.1 sonar scanner images, as the downloads for that version are no longer available.
 * Normalized the name of the unzipped sonar scanner directory to `sonar-scanner`
 so specific version numbers weren't included in the directory name. This allows for easier config
@@ -80,11 +101,11 @@ directory. It will scan everything under that directory when it starts up.
 The supplied sonar-runner.properties file points to http://192.168.99.100 as the
 Qube server. If you need to change that or any other of the variables that Scanner needs to run, you can pass them in with the command itself to override them:
 
-    docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner sonar-scanner sonar.host.url=YOURURL -Dsonar.projectBaseDir=./src
+    docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner sonar-scanner -Dsonar.host.url=YOURURL -Dsonar.projectBaseDir=./src
 
 or if you're running the `newtmitch/sonar-scanner:2.5.1` image, because the script name changed between 2.5.1 and 3.0.3 at some point:
 
-    docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner sonar-runner sonar.host.url=YOURURL -Dsonar.projectBaseDir=./src
+    docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner sonar-runner -Dsonar.host.url=YOURURL -Dsonar.projectBaseDir=./src
 
 Here's a fully-loaded command line (based on latest/3.0.3 version) that basically overrides everything from the sonar-runner.properties file on the command-line itself. The settings shown here match those in the sonar-runner.properties file.
 
@@ -107,7 +128,7 @@ code project in order to have it be called with this command as-written below.
 ```
 docker run -ti \
   -v $(pwd):/root/src \
-  -v $(pwd)/sonar-runner.properties:/root/sonar-scanner/conf/sonar-runner.properties \
+  -v $(pwd)/sonar-runner.properties:/root/sonar-scanner/conf/sonar-scanner.properties \
   --link sonarqube newtmitch/sonar-scanner sonar-scanner
 ```
 
@@ -150,31 +171,49 @@ This section is here so Mitch doesn't have to figure this out every time he upda
 and wants to push them to the repo... :smile:
 
 ```
+#
+# 3.2.0
+#
 docker build -t newtmitch/sonar-scanner:latest -f Dockerfile.sonarscanner-3.2.0-full .
-docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3.2.0
-docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3.2
-docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3
-docker tag newtmitch/sonar-scanner:latest
-docker push newtmitch/sonar-scanner:latest
-docker push newtmitch/sonar-scanner:3.2.0
-docker push newtmitch/sonar-scanner:3.2
+
+docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3.2.0 && \
+    docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3.2 && \
+    docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:3
+
+docker push newtmitch/sonar-scanner:latest && \
+docker push newtmitch/sonar-scanner:3.2.0 && \
+docker push newtmitch/sonar-scanner:3.2 && \
 docker push newtmitch/sonar-scanner:3
 
+#
+# 3.2.0 Alpine
+#
 docker build -t newtmitch/sonar-scanner:3.2.0-alpine -f Dockerfile.sonarscanner-3.2.0-alpine .
-docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:alpine
-docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:3.2-alpine
-docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:3-alpine
-docker push newtmitch/sonar-scanner:3.2.0-alpine
-docker push newtmitch/sonar-scanner:3.2-alpine
-docker push newtmitch/sonar-scanner:3-alpine
+
+docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:alpine && \
+    docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:3.2-alpine && \
+    docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:3-alpine
+
+docker push newtmitch/sonar-scanner:3.2.0-alpine && \
+docker push newtmitch/sonar-scanner:3.2-alpine && \
+docker push newtmitch/sonar-scanner:3-alpine && \
 docker push newtmitch/sonar-scanner:alpine
 
+#
+# 3.0.3
+#
 docker build -t newtmitch/sonar-scanner:3.0.3 -f Dockerfile.sonarscanner-3.0.3-full .
+
 docker tag newtmitch/sonar-scanner:3.0.3 newtmitch/sonar-scanner:3.0
-docker push newtmitch/sonar-scanner:3.0.3
+
+docker push newtmitch/sonar-scanner:3.0.3 && \
 docker push newtmitch/sonar-scanner:3.0
 
+#
+# 3.0.3 Alpine
+#
 docker build -t newtmitch/sonar-scanner:3.0.3-alpine -f Dockerfile.sonarscanner-3.0.3-alpine .
+
 docker push newtmitch/sonar-scanner:3.0.3-alpine
 ```
 

@@ -15,11 +15,11 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /src
 
-RUN curl --insecure -o ./sonarscanner.zip -L https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
-RUN unzip sonarscanner.zip
-RUN rm sonarscanner.zip
-RUN mv sonar-scanner-3.2.0.1227-linux /usr/lib/sonar-scanner
-RUN ln -s /usr/lib/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner
+RUN curl --insecure -o ./sonarscanner.zip -L https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip && \
+	unzip sonarscanner.zip && \
+	rm sonarscanner.zip && \
+	mv sonar-scanner-3.2.0.1227-linux /usr/lib/sonar-scanner && \
+    ln -s /usr/lib/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner
 
 ENV SONAR_RUNNER_HOME=/usr/lib/sonar-scanner
 
