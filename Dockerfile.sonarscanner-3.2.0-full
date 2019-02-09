@@ -27,4 +27,4 @@ COPY sonar-runner.properties /usr/lib/sonar-scanner/conf/sonar-scanner.propertie
 
 # Use bash if you want to run the environment from inside the shell, otherwise use the command that actually runs the underlying stuff
 #CMD /bin/bash
-CMD sonar-scanner -Dsonar.projectBaseDir=./src
+CMD sonar-scanner -Dsonar.projectBaseDir=/src
