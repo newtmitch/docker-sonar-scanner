@@ -19,7 +19,7 @@ RUN curl --insecure -o ./sonarscanner.zip -L https://binaries.sonarsource.com/Di
 	unzip sonarscanner.zip && \
 	rm sonarscanner.zip && \
 	mv sonar-scanner-3.2.0.1227-linux /usr/lib/sonar-scanner && \
-    ln -s /usr/lib/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner
+	ln -s /usr/lib/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner
 
 ENV SONAR_RUNNER_HOME=/usr/lib/sonar-scanner
 
