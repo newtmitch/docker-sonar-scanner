@@ -3,13 +3,17 @@ FROM openjdk:8
 LABEL maintainer="Anton Kozik <pazitron@gmail.com>"
 
 RUN apt-get update
-RUN apt-get install -y curl git tmux htop maven sudo
+RUN apt-get install -y tmux htop maven
 
 # Install Node - allows for scanning of Typescript
-RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-RUN sudo apt-get install -y nodejs build-essential
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN apt-get install -y nodejs build-essential && \
+    apt-get clean && \
+    apt-get autoclean && \
+    apt-get autoremove && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Set timezone to CST
+# Set timezone to CET - Warsaw
 ENV TZ=Europe/Warsaw
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
@@ -25,4 +29,4 @@ ENV PATH $PATH:/root/sonar-scanner/bin
 
 COPY sonar-runner.properties ./sonar-scanner/conf/sonar-scanner.properties
 
-CMD sonar-scanner -Dsonar.projectBaseDir=./src
+CMD ["sonar-scanner", "-Dsonar.projectBaseDir=./src"]
