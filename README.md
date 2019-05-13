@@ -44,7 +44,11 @@ just leave off the `--link` parameter:
 docker run -ti -v $(pwd):/usr/src newtmitch/sonar-scanner
 ```
 
-# Change Notes
+# Change Log
+
+### 2019-05-13
+* Commented out `sonar.exclusions` from the `sonar-runner.properties` file included in the image by default (issue #25)
+* Removed the use of the `/root` directory as part of the image build. Using `/usr/lib`, `/usr/bin`, and `/usr/src` now (issue #26)
 
 ### 2019-01-31
 * Added Scanner v3.3.0 to Dockerfiles (@mpodlodowski)
