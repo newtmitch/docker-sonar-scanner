@@ -130,15 +130,19 @@ code project in order to have it be called with this command as-written below.
 
 ```
 docker run -ti \
+  --rm \
   -v $(pwd):/root/src \
   -v $(pwd)/sonar-runner.properties:/root/sonar-scanner/conf/sonar-scanner.properties \
-  --link sonarqube newtmitch/sonar-scanner sonar-scanner
+  --link sonarqube \
+  newtmitch/sonar-scanner sonar-scanner
 ```
 
-## Typescript
+## Javascript / Typescript
 
 As of Aug 3, 2018, I installed Node as part of the scanner image so it can properly scan JS and TS
-files as-needed. I suggest you add an exclusion as part of either sonar-runner.properties:
+files as-needed. The SonarQube server excludes `**/node_modules/**` file patterns by default as
+part of JS and TS general settings (Adminstration -> Configuration -> General Settings). You can
+override those from a local sonar-runner.properties file:
 
 ```
 sonar.exclusions=**/node_modules/**/*
@@ -151,8 +155,8 @@ docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner sona
   -Dsonar.exclusions=**/node_modules/**/*
 ```
 
-I've added this to the deafult sonar-runner.properties file, so remove that if you don't want it
-there for some reason.
+I have this included and commented out in the sonar-runner.properties that ships as part of this
+image.
 
 # Build
 
