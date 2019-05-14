@@ -8,7 +8,7 @@ RUN apk add --no-cache  curl grep sed unzip nodejs nodejs-npm
 ENV TZ=America/Chicago
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-WORKDIR /src
+WORKDIR /usr/src
 
 RUN curl --insecure -o ./sonarscanner.zip -L https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.0.3.778-linux.zip && \
 	unzip sonarscanner.zip && \
