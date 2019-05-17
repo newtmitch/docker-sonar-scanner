@@ -46,6 +46,9 @@ docker run -ti -v $(pwd):/usr/src newtmitch/sonar-scanner
 
 # Change Log
 
+### 2019-05-16
+* Separated Dockerfile command into ENTRYPOINT and CMD operations to better follow Dockerfile best practices (see https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#entrypoint). (issue #29)
+
 ### 2019-05-13
 * Commented out `sonar.exclusions` from the `sonar-runner.properties` file included in the image by default (issue #25)
 * Removed the use of the `/root` directory as part of the image build. Using `/usr/lib`, `/usr/bin`, and `/usr/src` now (issue #26)
@@ -104,6 +107,11 @@ After your server is running, run the following command from the command line to
 Replace "$(pwd)" with the absolute path of the top-level source directly you're
 interested in if you're not running the docker image from the top level project
 directory. It will scan everything under that directory when it starts up.
+
+If you need to use a different directory as the project base directory, you can 
+pass that in as part of the docker run command to override that default:
+
+    docker run -ti -v $(pwd):/usr/src --link sonarqube newtmitch/sonar-scanner -Dsonar.projectBaseDir=/my/project/base/dir
 
 The supplied sonar-runner.properties file points to http://192.168.99.100 as the
 Qube server. If you need to change that or any other of the variables that Scanner needs to run, you can pass them in with the command itself to override them:
