@@ -116,7 +116,7 @@ pass that in as part of the docker run command to override that default:
 The supplied sonar-runner.properties file points to http://192.168.99.100 as the
 Qube server. If you need to change that or any other of the variables that Scanner needs to run, you can pass them in with the command itself to override them:
 
-    docker run -ti -v $(pwd):/usr/src --link sonarqube newtmitch/sonar-scanner sonar-scanner -Dsonar.host.url=YOURURL -Dsonar.projectBaseDir=/usr/src
+    docker run -ti -v $(pwd):/usr/src --link sonarqube newtmitch/sonar-scanner -Dsonar.host.url=YOURURL -Dsonar.projectBaseDir=/usr/src
 
 or if you're running the `newtmitch/sonar-scanner:2.5.1` image, because the script name changed between 2.5.1 and 3.0.3 at some point:
 
@@ -125,7 +125,7 @@ or if you're running the `newtmitch/sonar-scanner:2.5.1` image, because the scri
 Here's a fully-loaded command line (based on latest/3.0.3 version) that basically overrides everything from the sonar-runner.properties file on the command-line itself. The settings shown here match those in the sonar-runner.properties file.
 
 ```
-docker run -ti -v $(pwd):/usr/src --link sonarqube newtmitch/sonar-scanner sonar-scanner \
+docker run -ti -v $(pwd):/usr/src --link sonarqube newtmitch/sonar-scanner \
   -Dsonar.host.url=http://sonarqube:9000 \
   -Dsonar.jdbc.url=jdbc:h2:tcp://sonarqube/sonar \
   -Dsonar.projectKey=MyProjectKey \
@@ -146,7 +146,7 @@ docker run -ti \
   -v $(pwd):/usr/src \
   -v $(pwd)/sonar-runner.properties:/usr/lib/sonar-scanner/conf/sonar-scanner.properties \
   --link sonarqube \
-  newtmitch/sonar-scanner sonar-scanner
+  newtmitch/sonar-scanner
 ```
 
 ## Javascript / Typescript
@@ -163,7 +163,7 @@ sonar.exclusions=**/node_modules/**/*
 or via the command line:
 
 ```
-docker run -ti -v $(pwd):/usr/src --link sonarqube newtmitch/sonar-scanner sonar-scanner \         
+docker run -ti -v $(pwd):/usr/src --link sonarqube newtmitch/sonar-scanner \         
   -Dsonar.exclusions=**/node_modules/**/*
 ```
 
