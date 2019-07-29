@@ -234,6 +234,7 @@ docker push newtmitch/sonar-scanner:4 && \
 docker push newtmitch/sonar-scanner:4.0.0-alpine && \
 docker push newtmitch/sonar-scanner:4.0-alpine && \
 docker push newtmitch/sonar-scanner:4-alpine && \
+docker push newtmitch/sonar-scanner:alpine && \
 
 docker push newtmitch/sonar-scanner:3.3.0 && \
 docker push newtmitch/sonar-scanner:3.3 && \
