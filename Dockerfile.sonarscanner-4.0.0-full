@@ -3,7 +3,7 @@ FROM openjdk:8
 LABEL maintainer="Ryan Mitchell <mitch@ryansmitchell.com>"
 
 RUN apt-get update
-RUN apt-get install -y curl git tmux htop maven sudo
+RUN apt-get install -y curl git tmux htop maven sudo python-setuptools python3-setuptools
 
 # Install Node - allows for scanning of Typescript
 RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
