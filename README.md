@@ -1,7 +1,12 @@
-# docker-sonar-scanner Overview
+# docker-sonar-scanner
 
 **UPDATE 2020-11-25:** SonarScanner has an official Docker image available, and has for a while. See [here](https://hub.docker.com/r/sonarsource/sonar-scanner-cli) and [here](https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/) for details. Although I'm happy to keep my project alive to some degree, I'd love to hear from consumers and contributors of this repo about whether the official image is the Better Way™ or if what I've done here has some distinct and specific value that the official image doesn't. I've created an [issue here](https://github.com/newtmitch/docker-sonar-scanner/issues/42) for discussion if you'd like to add your thoughts. 
 
+# Breaking Change starting at tag 4.1.0:
+
+I introduced a terrible change into existing images that caused a issues for a bunch of people (sorry! :disappointed:) - see issue #29 and commit https://github.com/newtmitch/docker-sonar-scanner/commit/71cce66ba7b586fef5c6cb51cd25be23cf261b1c for discussions. As of the new Dockerfile I've introduced here, and starting with image tag newtmitch/sonar-scanner-alpine:4.1.0 I've moved back to the `CMD`-based Dockerfile run command instead of the combo `ENTRYPOINT`+`CMD`. I think this allows for the easiest override for both CI use-cases as well as normal CLI-based execution. Open an issue if you have other thoughts and we can discuss there.
+
+# Overview
 A quick [Sonar](http://www.sonarqube.org/) scanner (command line) container.
 
 https://hub.docker.com/r/newtmitch/sonar-scanner/
@@ -46,43 +51,6 @@ just leave off the `--link` parameter:
 docker run -ti -v $PWD:/usr/src newtmitch/sonar-scanner
 ```
 
-# Change Log
-
-### 2019-05-16
-* Separated Dockerfile command into ENTRYPOINT and CMD operations to better follow Dockerfile best practices (see https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#entrypoint). (issue #29)
-
-### 2019-05-13
-* Commented out `sonar.exclusions` from the `sonar-runner.properties` file included in the image by default (issue #25)
-* Removed the use of the `/root` directory as part of the image build. Using `/usr/lib`, `/usr/bin`, and `/usr/src` now (issue #26)
-
-### 2019-01-31
-* Added Scanner v3.3.0 to Dockerfiles (@mpodlodowski)
-
-### 2019-01-04
-* Decreased size of images by combining multiple command line operations into a single RUN command
-    (@DmitriyStoyanov)
-
-### 2018-10-14
-* Changed Sonar Scanner URL from bintray to sonarsource (@parnpresso)
-
-### 2018-10-03
-* Added NodeJS to the image to support JS/TS scanning (fixes #9)
-
-### 2018-06-24
-* Returned default timezone to original maintainers (@danstreeter)
-* Added Scanner v3.2.0 to Dockerfiles (@danstreeter)
-
-### 2018-08-03
-* Removed the 2.5.1 sonar scanner images, as the downloads for that version are no longer available.
-* Normalized the name of the unzipped sonar scanner directory to `sonar-scanner`
-so specific version numbers weren't included in the directory name. This allows for easier config
-replacement at runtime and (hopefully) reduces unnecessary complexity / specificity.
-* Added a new tag for the latest version of Sonar Scanner with the alpine base image: 
-`newtmitch/sonar-scanner:alpine`
-* Added some more instructions for running the sonar scanner and replacing the image-internal
-sonar-runner.properties with the external version at runtime (via normalizing the sonar scanner
-directory name).
-* Added instructions for myself later so I can more quickly run the build / update commands
 
 # Running - Long Version
 
@@ -113,28 +81,32 @@ directory. It will scan everything under that directory when it starts up.
 If you need to use a different directory as the project base directory, you can 
 pass that in as part of the docker run command to override that default:
 
-    docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner -Dsonar.projectBaseDir=/my/project/base/dir
+    docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner \
+        sonar-scanner -Dsonar.projectBaseDir=/my/project/base/dir
 
 The supplied sonar-runner.properties file points to http://192.168.99.100 as the
 Qube server. If you need to change that or any other of the variables that Scanner needs to run, you can pass them in with the command itself to override them:
 
-    docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner sonar-scanner -Dsonar.host.url=YOURURL -Dsonar.projectBaseDir=/usr/src
+    docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner \
+        sonar-scanner -Dsonar.host.url=YOURURL -Dsonar.projectBaseDir=/usr/src
 
 or if you're running the `newtmitch/sonar-scanner:2.5.1` image, because the script name changed between 2.5.1 and 3.0.3 at some point:
 
-    docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner sonar-runner -Dsonar.host.url=YOURURL -Dsonar.projectBaseDir=/usr/src
+    docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner \
+        sonar-runner -Dsonar.host.url=YOURURL -Dsonar.projectBaseDir=/usr/src
 
 Here's a fully-loaded command line (based on latest/3.0.3 version) that basically overrides everything from the sonar-runner.properties file on the command-line itself. The settings shown here match those in the sonar-runner.properties file.
 
 ```
-docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner sonar-scanner \
-  -Dsonar.host.url=http://sonarqube:9000 \
-  -Dsonar.jdbc.url=jdbc:h2:tcp://sonarqube/sonar \
-  -Dsonar.projectKey=MyProjectKey \
-  -Dsonar.projectName="My Project Name" \
-  -Dsonar.projectVersion=1 \
-  -Dsonar.projectBaseDir=/usr/src \
-  -Dsonar.sources=.
+docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner \
+    sonar-scanner \
+    -Dsonar.host.url=http://sonarqube:9000 \
+    -Dsonar.jdbc.url=jdbc:h2:tcp://sonarqube/sonar \
+    -Dsonar.projectKey=MyProjectKey \
+    -Dsonar.projectName="My Project Name" \
+    -Dsonar.projectVersion=1 \
+    -Dsonar.projectBaseDir=/usr/src \
+    -Dsonar.sources=.
 ```
 
 Or just have your local sonar-runner.properties override the default version built into the
@@ -176,86 +148,37 @@ image.
 
 ## Sonar Scanner 
 
-To build this scanner image, just issue a standard Docker build command - make sure to specify the Dockerfile that you're building:
+To build this scanner image, just issue a standard Docker build command. The Dockerfile contains a default Scanner version environment variable that is meant to be overridden on subsequent builds as needed and without changing the Dockerfile itself:
 
-    docker build -t newtmitch/sonar-scanner:latest -f Dockerfile.sonarscanner-3.2.0-full .
+```
+docker build -t newtmitch/sonar-scanner-alpine:latest -f Dockerfile.alpine --build-arg SCANNER_VERSION=4.5.0.2216 .
+docker build -t newtmitch/sonar-scanner:latest -f Dockerfile --build-arg SCANNER_VERSION=4.5.0.2216 .
+```
+
+The list of the last few version tags for future reference:
+
+* 4.0: `4.0.0.1744`
+* 4.1: `4.1.0.1829`
+* 4.2: `4.2.0.1873`
+* 4.3: `4.3.0.2102`
+* 4.4: `4.4.0.2170`
+* 4.5: `4.5.0.2216`
 
 ## Sonar Qube Server
 
 To build the customized Sonar Qube server, run the following command. See the [Server image](#server-image) section below for details on this image build.
 
-    docker build -t my-sonar-server -f Dockerfile.server .
-
-## Docker Commands
-
-These sections are here so Mitch can quickly run Docker commands without having to reconstruct them all the time. You don't have to worry about this stuff unless you really want to. But keeping them up to date is nice if you do PR's... :smile:
-
-### Building Docker Images
-
-Run these commands to build Docker images:
-
 ```
-docker build -t newtmitch/sonar-scanner:latest -f Dockerfile.sonarscanner-4.0.0-full . && \
-docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:4.0.0 && \
-    docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:4.0 && \
-    docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:4 && \
-
-docker build -t newtmitch/sonar-scanner:4.0.0-alpine -f Dockerfile.sonarscanner-4.0.0-alpine . && \
-docker tag newtmitch/sonar-scanner:4.0.0-alpine newtmitch/sonar-scanner:alpine && \
-    docker tag newtmitch/sonar-scanner:4.0.0-alpine newtmitch/sonar-scanner:4.0-alpine && \
-    docker tag newtmitch/sonar-scanner:4.0.0-alpine newtmitch/sonar-scanner:4-alpine && \
-
-docker build -t newtmitch/sonar-scanner:3.3.0 -f Dockerfile.sonarscanner-3.3.0-full . && \
-    docker tag newtmitch/sonar-scanner:3.3.0 newtmitch/sonar-scanner:3.3 && \
-    docker tag newtmitch/sonar-scanner:3.3.0 newtmitch/sonar-scanner:3 && \
-
-docker build -t newtmitch/sonar-scanner:3.3.0-alpine -f Dockerfile.sonarscanner-3.3.0-alpine . && \
-    docker tag newtmitch/sonar-scanner:3.3.0-alpine newtmitch/sonar-scanner:3.3-alpine && \
-    docker tag newtmitch/sonar-scanner:3.3.0-alpine newtmitch/sonar-scanner:3-alpine && \
-
-docker build -t newtmitch/sonar-scanner:3.2.0 -f Dockerfile.sonarscanner-3.2.0-full . && \
-docker tag newtmitch/sonar-scanner:3.2.0 newtmitch/sonar-scanner:3.2 && \
-
-docker build -t newtmitch/sonar-scanner:3.2.0-alpine -f Dockerfile.sonarscanner-3.2.0-alpine . && \
-docker tag newtmitch/sonar-scanner:3.2.0-alpine newtmitch/sonar-scanner:3.2-alpine && \
-
-docker build -t newtmitch/sonar-scanner:3.0.3 -f Dockerfile.sonarscanner-3.0.3-full . && \
-docker tag newtmitch/sonar-scanner:3.0.3 newtmitch/sonar-scanner:3.0 && \
-
-docker build -t newtmitch/sonar-scanner:3.0.3-alpine -f Dockerfile.sonarscanner-3.0.3-alpine .
+docker build -t my-sonar-server -f Dockerfile.server .
 ```
 
-### Pushing Docker Images
+## Tagging
+
+I tag the built images to correspond 1-1 with the Sonar Scanner major/minor/patch version itself with the semi-standard Docker-style `^` semver-style approach (i.e. the tag `4` would include the latest minor+patch version of 4.x, while `4.1` would include the latest 4.1.x)
 
 ```
-docker push newtmitch/sonar-scanner:latest && \
-docker push newtmitch/sonar-scanner:4.0.0 && \
-docker push newtmitch/sonar-scanner:4.0 && \
-docker push newtmitch/sonar-scanner:4 && \
-
-docker push newtmitch/sonar-scanner:4.0.0-alpine && \
-docker push newtmitch/sonar-scanner:4.0-alpine && \
-docker push newtmitch/sonar-scanner:4-alpine && \
-docker push newtmitch/sonar-scanner:alpine && \
-
-docker push newtmitch/sonar-scanner:3.3.0 && \
-docker push newtmitch/sonar-scanner:3.3 && \
-docker push newtmitch/sonar-scanner:3 && \
-
-docker push newtmitch/sonar-scanner:3.3.0-alpine && \
-docker push newtmitch/sonar-scanner:3.3-alpine && \
-docker push newtmitch/sonar-scanner:3-alpine && \
-
-docker push newtmitch/sonar-scanner:3.2.0 && \
-docker push newtmitch/sonar-scanner:3.2 && \
-
-docker push newtmitch/sonar-scanner:3.2.0-alpine && \
-docker push newtmitch/sonar-scanner:3.2-alpine && \
-
-docker push newtmitch/sonar-scanner:3.0.3 && \
-docker push newtmitch/sonar-scanner:3.0 && \
-
-docker push newtmitch/sonar-scanner:3.0.3-alpine
+docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:4
+docker tag newtmitch/sonar-scanner:latest newtmitch/sonar-scanner:4.5
 ```
 
 # Server image
@@ -266,4 +189,50 @@ time zone vs. the default (correct time reporting for analyzer runs).
 
 You can modify the Dockerfile to update the timezone, or just pass in the environment variable on-demand (assumes you build it with tag `mitch/sonarqube`). If you omit the TZ setting it'll default to CST.
 
-    docker run -d --name sonarqube -e "TZ=America/Chicago" -p 9000:9000 -p 9092:9092 newtmitch/sonar-server
+```
+docker run -d --name sonarqube -e "TZ=America/Chicago" -p 9000:9000 -p 9092:9092 newtmitch/sonar-server
+```
+
+# Change Log
+
+### 2020-11-25
+* Pulled back into a single Dockerfile command with an ENV-driven Scanner version (why didn't I think of that before?)
+* Moved from `ENTRYPOINT` back to `CMD`-based launch (I screwed up when switching over). See issues #29 and #30.
+* Added 4.1 - 4.5 Scanner versions
+* Upgraded the installed version of NodeJS to 12.
+
+### 2019-05-16
+* Separated Dockerfile command into ENTRYPOINT and CMD operations to better follow Dockerfile best practices (see https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#entrypoint). (issue #29)
+
+### 2019-05-13
+* Commented out `sonar.exclusions` from the `sonar-runner.properties` file included in the image by default (issue #25)
+* Removed the use of the `/root` directory as part of the image build. Using `/usr/lib`, `/usr/bin`, and `/usr/src` now (issue #26)
+
+### 2019-01-31
+* Added Scanner v3.3.0 to Dockerfiles (@mpodlodowski)
+
+### 2019-01-04
+* Decreased size of images by combining multiple command line operations into a single RUN command
+    (@DmitriyStoyanov)
+
+### 2018-10-14
+* Changed Sonar Scanner URL from bintray to sonarsource (@parnpresso)
+
+### 2018-10-03
+* Added NodeJS to the image to support JS/TS scanning (fixes #9)
+
+### 2018-06-24
+* Returned default timezone to original maintainers (@danstreeter)
+* Added Scanner v3.2.0 to Dockerfiles (@danstreeter)
+
+### 2018-08-03
+* Removed the 2.5.1 sonar scanner images, as the downloads for that version are no longer available.
+* Normalized the name of the unzipped sonar scanner directory to `sonar-scanner`
+so specific version numbers weren't included in the directory name. This allows for easier config
+replacement at runtime and (hopefully) reduces unnecessary complexity / specificity.
+* Added a new tag for the latest version of Sonar Scanner with the alpine base image: 
+`newtmitch/sonar-scanner:alpine`
+* Added some more instructions for running the sonar scanner and replacing the image-internal
+sonar-runner.properties with the external version at runtime (via normalizing the sonar scanner
+directory name).
+* Added instructions for myself later so I can more quickly run the build / update commands
