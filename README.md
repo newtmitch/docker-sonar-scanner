@@ -215,6 +215,7 @@ docker run -d --name sonarqube -e "TZ=America/Chicago" -p 9000:9000 -p 9092:9092
 ### 2020-11-25
 * Pulled back into a single Dockerfile command with an ENV-driven Scanner version (why didn't I think of that before?)
 * Moved from `ENTRYPOINT` back to `CMD`-based launch (I screwed up when switching over). See issues #29 and #30.
+* Image running with non-root user
 * Added 4.1 - 4.5 Scanner versions
 * Updated the base image from openjdk:8 to openjdk:12
 * Removed the non-alpine Dockerfile
