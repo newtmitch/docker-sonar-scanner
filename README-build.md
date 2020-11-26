@@ -20,25 +20,32 @@ docker tag newtmitch/sonar-scanner-alpine:4.4 newtmitch/sonar-scanner:4.4 && \
 docker build -t newtmitch/sonar-scanner-alpine:4.5 -f Dockerfile --build-arg SCANNER_VERSION=4.5.0.2216 . && \
 docker tag newtmitch/sonar-scanner-alpine:4.5 newtmitch/sonar-scanner-alpine:latest && \
 docker tag newtmitch/sonar-scanner-alpine:4.5 newtmitch/sonar-scanner:latest
+docker tag newtmitch/sonar-scanner-alpine:4.5 newtmitch/sonar-scanner:4.5
+docker tag newtmitch/sonar-scanner-alpine:4.5 newtmitch/sonar-scanner:4
+docker tag newtmitch/sonar-scanner-alpine:4.5 newtmitch/sonar-scanner-alpine:4
 
 # Push images
-docker push newtmitch/sonar-scanner-alpine:4.0-ci
-docker push newtmitch/sonar-scanner:4.0-ci
+docker push newtmitch/sonar-scanner-alpine:4.0-ci && \
+docker push newtmitch/sonar-scanner:4.0-ci && \
 
-docker push newtmitch/sonar-scanner-alpine:4.1
-docker push newtmitch/sonar-scanner:4.1
+docker push newtmitch/sonar-scanner-alpine:4.1 && \
+docker push newtmitch/sonar-scanner:4.1 && \
 
-docker push newtmitch/sonar-scanner-alpine:4.2
-docker push newtmitch/sonar-scanner:4.2
+docker push newtmitch/sonar-scanner-alpine:4.2 && \
+docker push newtmitch/sonar-scanner:4.2 && \
 
-docker push newtmitch/sonar-scanner-alpine:4.3
-docker push newtmitch/sonar-scanner:4.3
+docker push newtmitch/sonar-scanner-alpine:4.3 && \
+docker push newtmitch/sonar-scanner:4.3 && \
 
-docker push newtmitch/sonar-scanner-alpine:4.4
-docker push newtmitch/sonar-scanner:4.4
+docker push newtmitch/sonar-scanner-alpine:4.4 && \
+docker push newtmitch/sonar-scanner:4.4 && \
 
-docker push newtmitch/sonar-scanner-alpine:4.5
-docker push newtmitch/sonar-scanner:4.5
+docker push newtmitch/sonar-scanner-alpine:4.5 && \
+docker push newtmitch/sonar-scanner:4.5 && \
+docker push newtmitch/sonar-scanner:latest && \
+docker push newtmitch/sonar-scanner-alpine:latest && \
+docker push newtmitch/sonar-scanner:4 && \
+docker push newtmitch/sonar-scanner-alpine:4
 
 # Test run commands
 docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube
