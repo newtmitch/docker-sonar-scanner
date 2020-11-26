@@ -1,6 +1,6 @@
 # docker-sonar-scanner
 
-**UPDATE 2020-11-25:** SonarScanner has an official Docker image available, and has for a while. See [the GitHub repo](https://hub.docker.com/r/sonarsource/sonar-scanner-cli) and [Sonar Scanner install options](https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/) for details. Although I'm happy to keep my project alive, I'd love to hear from consumers and contributors of this repo about whether the official image is the Better Way™ or if what I've done here has some distinct and specific value that the official image doesn't. I've created an [issue here](https://github.com/newtmitch/docker-sonar-scanner/issues/42) for discussion if you'd like to add your thoughts. 
+**UPDATE 2020-11-25:** SonarScanner has an official Docker image available, and has for a while. See [the Docker Hub project](https://hub.docker.com/r/sonarsource/sonar-scanner-cli) and [Sonar Scanner install options](https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/) for details. Although I'm happy to keep my project alive, I'd love to hear from consumers and contributors of this repo about whether the official image is the Better Way™ or if what I've done here has some distinct and specific value that the official image doesn't. I've created an [issue here](https://github.com/newtmitch/docker-sonar-scanner/issues/42) for discussion if you'd like to add your thoughts. 
 
 # Breaking Change starting at tag 4.1.0:
 
