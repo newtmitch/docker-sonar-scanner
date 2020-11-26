@@ -39,7 +39,7 @@ Using the official Sonar Qube Docker image:
 
 ```
 docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube
-docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine
+docker run --rm -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine
 ```
 
 Run this from the root of your source code directory, it'll scan everything below it.
@@ -49,14 +49,14 @@ This uses the latest Qube image - if you want LTS, use image name `sonarqube:lts
 Run the alpine version:
 
 ```
-docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine
+docker run --rm -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine
 ```
 
 If you want to run without a local SonarQube instance (i.e. using a remote SonarQube), 
 just leave off the `--link` parameter:
 
 ```
-docker run -ti -v $PWD:/usr/src newtmitch/sonar-scanner-alpine
+docker run --rm -ti -v $PWD:/usr/src newtmitch/sonar-scanner-alpine
 ```
 
 
@@ -80,7 +80,7 @@ If you prefer a server build that automatically sets the timezone when you start
 
 After your server is running, run the following command from the command line to start the scanner. This uses the default settings in the sonar-runner.properties file, which you can overload with -D commands (see below).
 
-    docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine 
+    docker run --rm -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine 
 
 Replace "$PWD" with the absolute path of the top-level source directly you're
 interested in if you're not running the docker image from the top level project
@@ -89,31 +89,31 @@ directory. It will scan everything under that directory when it starts up.
 If you need to use a different directory as the project base directory, you can 
 pass that in as part of the docker run command to override that default:
 
-    docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine \
+    docker run --rm -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine \
         sonar-scanner -Dsonar.projectBaseDir=/my/project/base/dir
 
 The supplied sonar-runner.properties file points to http://192.168.99.100 as the
 Qube server. If you need to change that or any other of the variables that Scanner needs to run, you can pass them in with the command itself to override them:
 
-    docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine \
+    docker run --rm -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine \
         sonar-scanner -Dsonar.host.url=YOURURL -Dsonar.projectBaseDir=/usr/src
 
 or if you're running the `newtmitch/sonar-scanner:2.5.1` image, because the script name changed between 2.5.1 and 3.0.3 at some point:
 
-    docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine \
+    docker run --rm -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine \
         sonar-runner -Dsonar.host.url=YOURURL -Dsonar.projectBaseDir=/usr/src
 
 Here's how I use it occasionally with a single server across multiple projects just to do a semi-regular checkup:
 
 ```bash
-docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine \
+docker run --rm -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine \
     sonar-scanner -Dsonar.projectKey=myotherproject -Dsonar.projectName="Another Project"
 ```
 
 Here's a fully-loaded command line (based on latest/3.0.3 version) that basically overrides everything from the sonar-runner.properties file on the command-line itself. The settings shown here match those in the sonar-runner.properties file.
 
 ```
-docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine \
+docker run --rm -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine \
     sonar-scanner \
     -Dsonar.host.url=http://sonarqube:9000 \
     -Dsonar.jdbc.url=jdbc:h2:tcp://sonarqube/sonar \
@@ -130,7 +130,7 @@ file, source directories, or copy the sonar-runner.properties file into your act
 code project in order to have it be called with this command as-written below.
 
 ```
-docker run -ti \
+docker run --rm -ti \
   --rm \
   -v $PWD:/usr/src \
   -v $PWD/sonar-runner.properties:/usr/lib/sonar-scanner/conf/sonar-scanner.properties \
@@ -152,7 +152,7 @@ sonar.exclusions=**/node_modules/**/*
 or via the command line:
 
 ```
-docker run -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine sonar-scanner \         
+docker run --rm -ti -v $PWD:/usr/src --link sonarqube newtmitch/sonar-scanner-alpine sonar-scanner \         
   -Dsonar.exclusions=**/node_modules/**/*
 ```
 
