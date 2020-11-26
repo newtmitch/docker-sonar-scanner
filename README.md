@@ -8,6 +8,12 @@ I introduced a terrible change into existing images that caused a issues for a b
 
 I'm also going to push a new tag based on Sonar Scanner version 4.0 that uses the new `ENTRYPOINT` + `CMD` approach but leave the existing tags alone. This Docker image will have the tag `newtmitch/sonar-scanner-alpine:4.0.0-ci` and it's corresponding non-alpine counterpart. 
 
+# Moving to alpine-only image
+
+Starting with the 4.1 Sonar Scanner image, I'm only maintaining the alpine-based Docker image. From the best I can tell, the Alpine-based image is the one everyone locks on, so I'm keeping that my primary focus for now. If anyone has any comments about that, please let me know with an issue.
+
+I will continue to maintain alpine and non-alpine image tags in Docker Hub, but they'll all effectively point to the Alpine-based image underneath.
+
 # Overview
 A quick [Sonar](http://www.sonarqube.org/) scanner (command line) container.
 
@@ -208,6 +214,8 @@ docker run -d --name sonarqube -e "TZ=America/Chicago" -p 9000:9000 -p 9092:9092
 * Pulled back into a single Dockerfile command with an ENV-driven Scanner version (why didn't I think of that before?)
 * Moved from `ENTRYPOINT` back to `CMD`-based launch (I screwed up when switching over). See issues #29 and #30.
 * Added 4.1 - 4.5 Scanner versions
+* Updated the base image from openjdk:8 to openjdk:12
+* Removed the non-alpine Dockerfile
 * Upgraded the installed version of NodeJS to 12.
 
 ### 2019-05-16

@@ -1,14 +1,23 @@
-FROM openjdk:8
+FROM openjdk:12-jdk-alpine
 
 LABEL maintainer="Ryan Mitchell <mitch@ryansmitchell.com>"
 
-# BEGIN non-alpine-specific
-RUN apt-get update
-RUN apt-get install -y curl git tmux htop maven sudo
-# Install Node - allows for scanning of Typescript
-RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-RUN sudo apt-get install -y nodejs build-essential
-# END non-alpine-specific
+# BEGIN alpine-specific
+RUN apk add --no-cache curl grep sed unzip bash nodejs nodejs-npm
+# END alpine-specific
+
+# non-root user
+ENV USER=sonarscanner
+ENV UID=12345
+ENV GID=23456
+RUN addgroup --gid $GID sonarscanner
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --ingroup "$USER" \
+    --no-create-home \
+    --uid "$UID" \
+    "$USER"
 
 # Set timezone to CST
 ENV TZ=America/Chicago
@@ -29,6 +38,9 @@ RUN curl --insecure -o ${SCANNER_FILE} \
 ENV SONAR_RUNNER_HOME=/usr/lib/sonar-scanner
 
 COPY sonar-runner.properties /usr/lib/sonar-scanner/conf/sonar-scanner.properties
+
+# ensure Sonar uses the provided Java for musl instead of a borked glibc one
+RUN sed -i 's/use_embedded_jre=true/use_embedded_jre=false/g' /usr/lib/sonar-scanner/bin/sonar-scanner
 
 # Separating ENTRYPOINT and CMD operations allows for core execution variables to
 # be easily overridden by passing them in as part of the `docker run` command.
